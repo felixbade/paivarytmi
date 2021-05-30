@@ -6,14 +6,32 @@
     <h1>{{ metric_name }}</h1>
 </div>
 
-{#<ul>
-
-{% for metric in metrics %}
-<li><a href="/metric/{{ metric.id }}">{{ metric.name }}</a></li>
-{% endfor %}
-
-</ul>
-#}
+<div id="pageview">
+    <table>
+        <thead>
+            <tr>
+                <th>Viikko</th>
+                <th>Su</th>
+                <th>Ma</th>
+                <th>Ti</th>
+                <th>Ke</th>
+                <th>To</th>
+                <th>Pe</th>
+                <th>La</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in weeks %}
+                <tr>
+                    <th>{{ week.week.year }}-{{ week.week.weeknumber }}</th>
+                    {% for day in week.days %}
+                        <td>20:30</td>
+                    {% endfor %}                
+                </tr>
+            {% endfor %}                
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
 
