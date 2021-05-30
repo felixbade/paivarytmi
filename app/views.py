@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import strptime
+from math import ceil
 
-from flask import render_template, request
+from flask import render_template, request, redirect
 
 from app import app, db
 from app.models.metric import Metric
@@ -24,16 +25,26 @@ def index():
 
     return render_template('frontpage.html', metrics=metrics)
 
-def get_log_event_at(metric_id, year, weeknumber, weekday):
-    events = LogEvent.query.filter(LogEvent.date == date_from_weeknumber_day(year, weeknumber, weekday), LogEvent.metric_id == metric_id)
+def get_log_event_at(metric, year, weeknumber, weekday):
+    events = LogEvent.query.filter(LogEvent.date == date_from_weeknumber_day(year, weeknumber, weekday), LogEvent.metric_id == metric.id)
     event = events.order_by(LogEvent.id.desc()).first()
+
+    success = 1
+    if event:
+        diff = (event.log_time - metric.ideal_time)
+        if diff < timedelta(hours=-12):
+            diff += timedelta(days=1)
+        if diff.days == 0:
+            hour_diff = diff.seconds / 60 / 60
+            success = int(ceil(min(hour_diff / 1.5 + 1, 5)))
+            print(event.log_time, metric.ideal_time, hour_diff, success)
 
     if not event:
         return None
     else:
         return {
             'time': event.log_time.strftime('%H:%M'),
-            'success': 1
+            'success': success
         }
 
 def get_week_data(metric, week):
@@ -47,7 +58,7 @@ def get_week_data(metric, week):
         'days': [
             {
                 'weekday': weekday,
-                'log_event': get_log_event_at(metric.id, year, weeknumber, weekday)
+                'log_event': get_log_event_at(metric, year, weeknumber, weekday)
             }
             for weekday in range(7)
         ]
@@ -77,6 +88,8 @@ def edit_log_data():
     metric_id = request.args.get('metric_id')
     params['metric'] = Metric.query.filter_by(id=metric_id).first()
 
+    params['return_to'] = request.referrer
+
     return render_template('log_event.html', **params)
 
 @app.route('/edit', methods=['POST'])
@@ -93,4 +106,4 @@ def submit_log_data():
     db.session.add(LogEvent(date=d, log_time=log_time, metric_id=metric_id))
     db.session.commit()
     
-    return 'success %r' % d
+    return redirect(request.form.get('return_to'))
