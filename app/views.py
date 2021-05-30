@@ -37,7 +37,6 @@ def get_log_event_at(metric, year, weeknumber, weekday):
         if diff.days == 0:
             hour_diff = diff.seconds / 60 / 60
             success = int(ceil(min(hour_diff / 1.5 + 1, 5)))
-            print(event.log_time, metric.ideal_time, hour_diff, success)
 
     if not event:
         return None
