@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="titleview">
+    <a href="/">←</a>
+    <h1>{{ metric_name }}</h1>
+</div>
+
+{#<ul>
+
+{% for metric in metrics %}
+<li><a href="/metric/{{ metric.id }}">{{ metric.name }}</a></li>
+{% endfor %}
+
+</ul>
+#}
+
+{% endblock %}
+
