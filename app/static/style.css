@@ -42,3 +42,29 @@ th {
 td {
     text-align: center;
 }
+
+/* Success colors */
+.success-1 {
+    background-color: #6da34d;
+    color: white;
+}
+
+.success-2 {
+    background-color: #cbdf90;
+    color: black;
+}
+
+.success-3 {
+    background-color: #f1a883;
+    color: black;
+}
+
+.success-4 {
+    background-color: #b63546;
+    color: white;
+}
+
+.success-5 {
+    background-color: #410b13;
+    color: white;
+}
