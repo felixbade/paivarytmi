@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-toimii
+<ul>
+
+{% for metric in metrics %}
+<li><a href="/metric/{{ metric.id }}">{{ metric.name }}</a></li>
+{% endfor %}
+
+</ul>
+
 {% endblock %}
 
