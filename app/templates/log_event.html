@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>
+    Vuosi:
+    {{ year }}
+</p>
+<p>
+    Viikko:
+    {{ weeknumber }}
+</p>
+<p>
+    Päivä:
+    {{ ['Sunnuntai', 'Maanantai', 'Tiistai', 'Keskiviikko', 'Torstai', 'Perjantai', 'Lauantai'][weekday] }}    
+</p>
+<p>
+    Mittari:
+    {{ metric.name }}
+</p>
+
+<form method="POST" action="/edit">
+    <input type="hidden" name="metric_id" value="{{ metric.id }}">
+    <input type="hidden" name="year" value="{{ year }}">
+    <input type="hidden" name="weeknumber" value="{{ weeknumber }}">
+    <input type="hidden" name="weekday" value="{{ weekday }}">
+
+    <label for="timestamp">Kello:</label>
+
+    <select name="timestamp" id="timestamp">
+        {% for hour in range(4, 28) %}
+        <option value="{{ hour % 24 }}:00">{{ hour % 24 }}:00</option>
+        <option value="{{ hour % 24 }}:30">{{ hour % 24 }}:30</option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+    <input type="submit" value="Tallenna">
+</form>
+
+{% endblock %}

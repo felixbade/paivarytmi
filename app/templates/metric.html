@@ -3,7 +3,7 @@
 {% block content %}
 <div id="titleview">
     <a href="/">←</a>
-    <h1>{{ metric_name }}</h1>
+    <h1>{{ metric.name }}</h1>
 </div>
 
 <div id="pageview">
@@ -25,10 +25,18 @@
                 <tr>
                     <th>{{ week.week.year }}-{{ week.week.weeknumber }}</th>
                     {% for day in week.days %}
-                        {% if day %}
-                        <td class="success-{{ day.log_event.success }}">{{ day.log_event.time }}</td>
+                        {% if day.log_event %}
+                        <td class="success-{{ day.log_event.success }}">
+                            <a href="/edit?metric_id={{ metric.id }}&year={{ week.week.year }}&weeknumber={{ week.week.weeknumber }}&weekday={{ day.weekday }}">
+                                {{ day.log_event.time }}
+                            </a>
+                        </td>
                         {% else %}
-                        <td>-</td>
+                        <td>
+                            <a href="/edit?metric_id={{ metric.id }}&year={{ week.week.year }}&weeknumber={{ week.week.weeknumber }}&weekday={{ day.weekday }}">
+                                -
+                            </a>
+                        </td>
                         {% endif %}
                     {% endfor %}                
                 </tr>
