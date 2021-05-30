@@ -28,7 +28,10 @@ def get_week_data(metric, week):
         'days': [
             {
                 'weekday': weekday,
-                'log_event': None
+                'log_event': {
+                    'time': '20:30',
+                    'success': weekday
+                } if weekday in [1, 2, 3, 4, 5] else None
             }
             for weekday in range(7)
         ]
@@ -41,7 +44,6 @@ def view_metric(metric_id):
     weeks = []
     weeks.append(get_week_data(metric, (year, weeknumber-1)))
     weeks.append(get_week_data(metric, (year, weeknumber)))
-
 
     return render_template('metric.html', metric_name=metric.name, weeks=weeks)
 
