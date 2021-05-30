@@ -26,7 +26,7 @@ def index():
 
 def get_log_event_at(metric_id, year, weeknumber, weekday):
     events = LogEvent.query.filter(LogEvent.date == date_from_weeknumber_day(year, weeknumber, weekday), LogEvent.metric_id == metric_id)
-    event = events.first()
+    event = events.order_by(LogEvent.id.desc()).first()
 
     if not event:
         return None
