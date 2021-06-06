@@ -22,6 +22,14 @@ def date_from_weeknumber_day(year, weeknumber, weekday):
         weeknumber -= 1
     return datetime.fromisocalendar(year, weeknumber, weekday)
 
+def get_year_week_today():
+    year, weeknumber, weekday = datetime.now().isocalendar()
+    if weekday == 7:
+        # todo bug with weeknumber=1
+        weekday = 0
+        weeknumber += 1
+    return year, weeknumber, weekday
+
 def get_metrics():
     return Metric.query.order_by(Metric.ideal_time.asc()).all()
 
@@ -71,7 +79,14 @@ def get_week_data(metric, week):
 @app.route('/')
 def index():
     metrics = get_metrics()
-    return render_template('frontpage.html', metrics=metrics)
+
+    year, weeknumber, weekday = get_year_week_today()
+    today = {
+        'year': year,
+        'weeknumber': weeknumber
+    }
+
+    return render_template('frontpage.html', metrics=metrics, today=today)
 
 
 
@@ -80,11 +95,7 @@ def index():
 @app.route('/metric/<int:metric_id>/')
 def view_metric(metric_id):
     metric = Metric.query.filter_by(id=metric_id).first()
-    year, weeknumber, weekday = datetime.now().isocalendar()
-    if weekday == 7:
-        # todo bug with weeknumber=1
-        weekday = 0
-        weeknumber += 1
+    year, weeknumber, weekday = get_year_week_today()
     weeks = []
     weeks.append(get_week_data(metric, (year, weeknumber-1)))
     weeks.append(get_week_data(metric, (year, weeknumber)))
@@ -97,12 +108,7 @@ def view_metric(metric_id):
 
 @app.route('/week')
 def view_week():
-    current_year, current_weeknumber, current_weekday = datetime.now().isocalendar()
-    if current_weekday == 7:
-        # todo bug with weeknumber=1
-        current_weekday = 0
-        current_weeknumber += 1
-
+    current_year, current_weeknumber, current_weekday = get_year_week_today()
     
     year = int(request.args.get('year', current_year))
     weeknumber = int(request.args.get('weeknumber', current_weeknumber))

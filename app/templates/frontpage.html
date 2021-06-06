@@ -3,6 +3,8 @@
 {% block content %}
 <ul>
 
+<li><a href="/week?year={{ today.year }}&weeknumber={{ today.weeknumber }}">Viikkonäkymä</a></li>
+
 {% for metric in metrics %}
 <li><a href="/metric/{{ metric.id }}">{{ metric.name }}</a></li>
 {% endfor %}
