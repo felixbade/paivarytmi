@@ -8,6 +8,10 @@ from app import app, db
 from app.models.metric import Metric
 from app.models.log_event import LogEvent
 
+
+
+# Helpers
+
 def time_at(timestamp):
     return datetime(*(strptime(timestamp, '%H:%M')[0:6]))
 
@@ -17,13 +21,6 @@ def date_from_weeknumber_day(year, weeknumber, weekday):
         weekday = 7
         weeknumber -= 1
     return datetime.fromisocalendar(year, weeknumber, weekday)
-
-@app.route('/')
-def index():
-
-    metrics = Metric.query.order_by(Metric.ideal_time.asc()).all()
-
-    return render_template('frontpage.html', metrics=metrics)
 
 def get_log_event_at(metric, year, weeknumber, weekday):
     events = LogEvent.query.filter(LogEvent.date == date_from_weeknumber_day(year, weeknumber, weekday), LogEvent.metric_id == metric.id)
@@ -45,6 +42,21 @@ def get_log_event_at(metric, year, weeknumber, weekday):
             'time': event.log_time.strftime('%H:%M'),
             'success': success
         }
+
+
+
+# Metric list
+
+@app.route('/')
+def index():
+
+    metrics = Metric.query.order_by(Metric.ideal_time.asc()).all()
+
+    return render_template('frontpage.html', metrics=metrics)
+
+
+
+# Weeks in a metric
 
 def get_week_data(metric, week):
     year, weeknumber = week
@@ -76,6 +88,10 @@ def view_metric(metric_id):
     weeks.append(get_week_data(metric, (year, weeknumber)))
 
     return render_template('metric.html', metric=metric, weeks=weeks)
+
+
+
+# Add/edit datapoint
 
 @app.route('/edit')
 def edit_log_data():
