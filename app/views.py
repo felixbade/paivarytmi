@@ -21,7 +21,7 @@ def date_from_weeknumber_day(year, weeknumber, weekday):
 @app.route('/')
 def index():
 
-    metrics = Metric.query.all()
+    metrics = Metric.query.order_by(Metric.ideal_time.asc()).all()
 
     return render_template('frontpage.html', metrics=metrics)
 
