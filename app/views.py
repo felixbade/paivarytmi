@@ -97,7 +97,12 @@ def view_metric(metric_id):
 
 @app.route('/week')
 def view_week():
-    current_year, current_weeknumber, _ = datetime.now().isocalendar()
+    current_year, current_weeknumber, current_weekday = datetime.now().isocalendar()
+    if current_weekday == 7:
+        # todo bug with weeknumber=1
+        current_weekday = 0
+        current_weeknumber += 1
+
     
     year = int(request.args.get('year', current_year))
     weeknumber = int(request.args.get('weeknumber', current_weeknumber))
