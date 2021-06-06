@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="titleview">
+    <a href="/">←</a>
+    <h1>{{ week.year }}-{{ week.weeknumber }}</h1>
+</div>
+
+<div id="pageview">
+    <table>
+        <thead>
+            <tr>
+                <th>Viikko</th>
+                <th>Su</th>
+                <th>Ma</th>
+                <th>Ti</th>
+                <th>Ke</th>
+                <th>To</th>
+                <th>Pe</th>
+                <th>La</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric in metrics %}
+                <tr>
+                    <th>{{ metric.metric.name }}</th>
+                    {% for day in metric.days %}
+                        {% if day.log_event %}
+                        <td class="success-{{ day.log_event.success }}">
+                            <a href="/edit?metric_id={{ metric.id }}&year={{ week.year }}&weeknumber={{ week.weeknumber }}&weekday={{ day.weekday }}">
+                                {{ day.log_event.time }}
+                            </a>
+                        </td>
+                        {% else %}
+                        <td>
+                            <a href="/edit?metric_id={{ metric.id }}&year={{ week.year }}&weeknumber={{ week.weeknumber }}&weekday={{ day.weekday }}">
+                                -
+                            </a>
+                        </td>
+                        {% endif %}
+                    {% endfor %}                
+                </tr>
+            {% endfor %}                
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

@@ -22,6 +22,9 @@ def date_from_weeknumber_day(year, weeknumber, weekday):
         weeknumber -= 1
     return datetime.fromisocalendar(year, weeknumber, weekday)
 
+def get_metrics():
+    return Metric.query.order_by(Metric.ideal_time.asc()).all()
+
 def get_log_event_at(metric, year, weeknumber, weekday):
     events = LogEvent.query.filter(LogEvent.date == date_from_weeknumber_day(year, weeknumber, weekday), LogEvent.metric_id == metric.id)
     event = events.order_by(LogEvent.id.desc()).first()
@@ -43,21 +46,6 @@ def get_log_event_at(metric, year, weeknumber, weekday):
             'success': success
         }
 
-
-
-# Metric list
-
-@app.route('/')
-def index():
-
-    metrics = Metric.query.order_by(Metric.ideal_time.asc()).all()
-
-    return render_template('frontpage.html', metrics=metrics)
-
-
-
-# Weeks in a metric
-
 def get_week_data(metric, week):
     year, weeknumber = week
     return {
@@ -75,6 +63,20 @@ def get_week_data(metric, week):
         ]
     }
 
+
+
+
+# Metric list
+
+@app.route('/')
+def index():
+    metrics = get_metrics()
+    return render_template('frontpage.html', metrics=metrics)
+
+
+
+# Weeks in a metric
+
 @app.route('/metric/<int:metric_id>/')
 def view_metric(metric_id):
     metric = Metric.query.filter_by(id=metric_id).first()
@@ -88,6 +90,28 @@ def view_metric(metric_id):
     weeks.append(get_week_data(metric, (year, weeknumber)))
 
     return render_template('metric.html', metric=metric, weeks=weeks)
+
+
+
+# Metrics in week
+
+@app.route('/week')
+def view_week():
+    current_year, current_weeknumber, _ = datetime.now().isocalendar()
+    
+    year = int(request.args.get('year', current_year))
+    weeknumber = int(request.args.get('weeknumber', current_weeknumber))
+
+    week = {
+        'year': year,
+        'weeknumber': weeknumber
+    }
+
+    metrics = []
+    for metric in get_metrics():
+        metrics.append(get_week_data(metric, (year, weeknumber)))
+
+    return render_template('week.html', week=week, metrics=metrics)
 
 
 
