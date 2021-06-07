@@ -27,13 +27,13 @@
                     {% for day in metric.days %}
                         {% if day.log_event %}
                         <td class="success-{{ day.log_event.success }}">
-                            <a href="/edit?metric_id={{ metric.id }}&year={{ week.year }}&weeknumber={{ week.weeknumber }}&weekday={{ day.weekday }}">
+                            <a href="/edit?metric_id={{ metric.metric.id }}&year={{ week.year }}&weeknumber={{ week.weeknumber }}&weekday={{ day.weekday }}">
                                 {{ day.log_event.time }}
                             </a>
                         </td>
                         {% else %}
                         <td>
-                            <a href="/edit?metric_id={{ metric.id }}&year={{ week.year }}&weeknumber={{ week.weeknumber }}&weekday={{ day.weekday }}">
+                            <a href="/edit?metric_id={{ metric.metric.id }}&year={{ week.year }}&weeknumber={{ week.weeknumber }}&weekday={{ day.weekday }}">
                                 -
                             </a>
                         </td>
