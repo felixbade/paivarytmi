@@ -73,23 +73,6 @@ def get_week_data(metric, week):
 
 
 
-
-# Metric list
-
-@app.route('/')
-def index():
-    metrics = get_metrics()
-
-    year, weeknumber, weekday = get_year_week_today()
-    today = {
-        'year': year,
-        'weeknumber': weeknumber
-    }
-
-    return render_template('frontpage.html', metrics=metrics, today=today)
-
-
-
 # Weeks in a metric
 
 @app.route('/metric/<int:metric_id>/')
@@ -106,7 +89,7 @@ def view_metric(metric_id):
 
 # Metrics in week
 
-@app.route('/week')
+@app.route('/')
 def view_week():
     current_year, current_weeknumber, current_weekday = get_year_week_today()
     
