@@ -23,7 +23,7 @@
         <tbody>
             {% for metric in metrics %}
                 <tr>
-                    <th>{{ metric.metric.name }}</th>
+                    <th><a href="/metric/{{ metric.metric.id }}">{{ metric.metric.name }}</a></th>
                     {% for day in metric.days %}
                         {% if day.log_event %}
                         <td class="success-{{ day.log_event.success }}">
