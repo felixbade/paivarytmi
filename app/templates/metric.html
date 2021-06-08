@@ -2,7 +2,6 @@
 
 {% block content %}
 <div id="titleview">
-    <a href="/">←</a>
     <h1>{{ metric.name }}</h1>
 </div>
 
@@ -23,7 +22,7 @@
         <tbody>
             {% for week in weeks %}
                 <tr>
-                    <th>{{ week.week.year }}-{{ week.week.weeknumber }}</th>
+                    <th><a href="/?year={{ week.week.year }}&weeknumber={{ week.week.weeknumber }}">{{ week.week.year }}-{{ week.week.weeknumber }}</a></th>
                     {% for day in week.days %}
                         {% if day.log_event %}
                         <td class="success-{{ day.log_event.success }}">
@@ -46,4 +45,3 @@
 </div>
 
 {% endblock %}
-
