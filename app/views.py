@@ -168,8 +168,6 @@ def submit_log_data():
         log_time = time_at(timestamp)
     except:
         log_time = time_at('0:00')
-
-    print('log_time', log_time)
     
     skipped = timestamp == 'skipped'
     cleared = timestamp == 'cleared'
