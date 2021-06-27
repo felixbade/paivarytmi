@@ -2,7 +2,12 @@
 
 {% block content %}
 <div id="titleview">
-    <h1>{{ week.year }}-{{ week.weeknumber }}</h1>
+    <h1>
+        {# TODO: breaks when the year changes #}
+        <a href="/?year={{ week.year }}&weeknumber={{ week.weeknumber - 1 }}">←</a>
+        {{ week.year }}-{{ week.weeknumber }}
+        <a href="/?year={{ week.year }}&weeknumber={{ week.weeknumber + 1 }}">→</a>
+    </h1>
 </div>
 
 <div id="pageview">

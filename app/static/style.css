@@ -25,7 +25,8 @@ body {
 }
 
 #titleview a {
-    margin-right: 1em;
+    color: black;
+    text-decoration: none;
 }
 
 /* Table */
