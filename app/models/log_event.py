@@ -5,6 +5,8 @@ class LogEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False)
     log_time = db.Column(db.DateTime, nullable=False)
+    skipped = db.Column(db.Boolean, default=False)
+    cleared = db.Column(db.Boolean, default=False)
 
     metric_id = db.Column(db.Integer, db.ForeignKey('metric.id'),
         nullable=False)

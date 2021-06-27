@@ -57,6 +57,13 @@ def get_log_event_at(metric, year, weeknumber, weekday):
     if not event:
         return None
     else:
+        if event.cleared:
+            return None
+        if event.skipped:
+            return {
+                'time': '–',
+                'success': 5
+            }
         return {
             'time': event.log_time.strftime('%H:%M'),
             'success': success
@@ -156,11 +163,20 @@ def submit_log_data():
     weekday = int(request.form.get('weekday'))
     d = date_from_weeknumber_day(year, weeknumber, weekday)
 
-    log_time = time_at(request.form.get('timestamp'))
+    timestamp = request.form.get('timestamp')
+    try:
+        log_time = time_at(timestamp)
+    except:
+        log_time = time_at('0:00')
+
+    print('log_time', log_time)
+    
+    skipped = timestamp == 'skipped'
+    cleared = timestamp == 'cleared'
 
     metric_id = int(request.form.get('metric_id'))
 
-    db.session.add(LogEvent(date=d, log_time=log_time, metric_id=metric_id))
+    db.session.add(LogEvent(date=d, metric_id=metric_id, log_time=log_time, skipped=skipped, cleared=cleared))
     db.session.commit()
     
     return redirect(request.form.get('return_to'))
