@@ -30,6 +30,14 @@ def get_year_week_today():
         weeknumber += 1
     return year, weeknumber, weekday
 
+def get_year_week_at(d):
+    year, weeknumber, weekday = d.isocalendar()
+    if weekday == 7:
+        # todo bug with weeknumber=1
+        weekday = 0
+        weeknumber += 1
+    return year, weeknumber, weekday
+
 def get_metrics():
     return Metric.query.order_by(Metric.ideal_time.asc()).all()
 
@@ -71,6 +79,18 @@ def get_week_data(metric, week):
         ]
     }
 
+def get_active_weeks_of_metric(metric):
+    events = LogEvent.query.filter(LogEvent.metric_id == metric.id)
+    year_weeks = []
+
+    for event in events.order_by(LogEvent.id.asc()):
+        year, weeknumber, weekday = get_year_week_at(event.date)
+        year_week = (year, weeknumber)
+        if year_week not in year_weeks:
+            year_weeks.append(year_week)
+
+    return year_weeks
+
 
 
 # Weeks in a metric
@@ -79,9 +99,13 @@ def get_week_data(metric, week):
 def view_metric(metric_id):
     metric = Metric.query.filter_by(id=metric_id).first()
     year, weeknumber, weekday = get_year_week_today()
+    active_weeks = get_active_weeks_of_metric(metric)
+    if (year, weeknumber) not in active_weeks:
+        active_weeks.append((year, weeknumber))
+    
     weeks = []
-    weeks.append(get_week_data(metric, (year, weeknumber-1)))
-    weeks.append(get_week_data(metric, (year, weeknumber)))
+    for year_week in active_weeks:
+        weeks.append(get_week_data(metric, year_week))
 
     return render_template('metric.html', metric=metric, weeks=weeks)
 
